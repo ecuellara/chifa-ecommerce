@@ -18,8 +18,8 @@
       >
         <img
           v-if="product.image"
-          :src="`http://127.0.0.1:8000${product.image}`"
-          alt="product.name"
+          :src="product.image"
+          :alt="product.name"
           class="w-20 h-20 object-cover rounded mr-4"
         />
         <div>
