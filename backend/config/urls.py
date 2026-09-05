@@ -1,13 +1,18 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from catalog.views import CategoryViewSet
+from catalog.views import CategoryViewSet, ProductViewSet  # Importamos ProductViewSet
+from django.conf import settings
+from django.conf.urls.static import static
 
-# Creamos un router y registramos nuestro ViewSet
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='category')
+router.register(r'products', ProductViewSet, basename='product')  # <--- NUEVA LÍNEA
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),  # Todas las rutas del router estarán bajo /api/
+    path('api/', include(router.urls)),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

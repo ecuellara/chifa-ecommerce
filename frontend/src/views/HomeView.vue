@@ -13,22 +13,14 @@
     </div>
 
     <!-- Lista de categorías -->
-    <div v-else>
-      <div
-        v-for="category in categoryStore.categories"
-        :key="category.id"
-        class="bg-white shadow-md rounded-lg p-4 mb-3 border-l-4 border-red-500"
-      >
+    <div v-for="category in categoryStore.categories" :key="category.id"
+      class="bg-white shadow-md rounded-lg p-4 mb-3 border-l-4 border-red-500 hover:shadow-lg transition cursor-pointer">
+      <router-link :to="`/categoria/${category.slug}`" class="block">
         <h2 class="text-xl font-semibold text-gray-800">{{ category.name }}</h2>
         <p v-if="category.description" class="text-gray-600 text-sm">
           {{ category.description }}
         </p>
-      </div>
-
-      <!-- Mensaje si no hay categorías -->
-      <p v-if="categoryStore.categories.length === 0" class="text-gray-400">
-        No hay categorías disponibles.
-      </p>
+      </router-link>
     </div>
   </div>
 </template>
