@@ -3,10 +3,9 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from catalog.views import CategoryViewSet, ProductViewSet
 from delivery.views import DeliveryZoneViewSet
-from orders.views import MyOrdersListAPIView, OrderCreateAPIView, OrderDetailAPIView
+from orders.views import MyOrdersListAPIView, OrderCreateAPIView, OrderDetailAPIView, OrderTrackAPIView
 from django.conf import settings
 from django.conf.urls.static import static
-from orders.views import OrderCreateAPIView, OrderDetailAPIView, OrderTrackAPIView
 from accounts.views import RegisterAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
