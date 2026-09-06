@@ -5,11 +5,11 @@ from .models import Product
 from .serializers import ProductSerializer
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Category.objects.filter(is_active=True)  # Solo categorías activas
     serializer_class = CategorySerializer
 
-class ProductViewSet(viewsets.ModelViewSet):
+class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Product.objects.filter(is_active=True).select_related('category')
     serializer_class = ProductSerializer
 

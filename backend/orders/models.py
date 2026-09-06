@@ -1,0 +1,61 @@
+from django.db import models
+from django.core.exceptions import ValidationError
+from catalog.models import Product
+from delivery.models import DeliveryZone
+
+class Order(models.Model):
+    DELIVERY = 'delivery'
+    PICKUP = 'recojo'
+    TYPE_CHOICES = [(DELIVERY, 'Delivery'), (PICKUP, 'Recojo en tienda')]
+
+    PAYMENT_CHOICES = [
+        ('yape', 'Yape/Plin'),
+        ('tarjeta', 'Tarjeta'),
+        ('efectivo', 'Efectivo'),
+    ]
+    STATUS_CHOICES = [
+        ('pendiente', 'Pendiente'),
+        ('confirmado', 'Confirmado'),
+        ('preparacion', 'En preparación'),
+        ('camino', 'En camino'),
+        ('entregado', 'Entregado'),
+        ('cancelado', 'Cancelado'),
+    ]
+
+    tipo_entrega = models.CharField(max_length=20, choices=TYPE_CHOICES, default=DELIVERY)
+    nombre = models.CharField(max_length=120)
+    telefono = models.CharField(max_length=20)
+    zona = models.ForeignKey(DeliveryZone, on_delete=models.SET_NULL, null=True, blank=True)
+    direccion = models.CharField(max_length=255, blank=True)
+    referencia = models.CharField(max_length=255, blank=True)
+    metodo_pago = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default='efectivo')
+
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    delivery_cost = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    estado = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendiente')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Pedido #{self.id} - {self.nombre} - S/. {self.total}"
+
+    def clean(self):
+        if self.tipo_entrega == self.DELIVERY:
+            if not self.zona:
+                raise ValidationError({'zona': 'Delivery exige zona.'})
+            if not self.direccion.strip():
+                raise ValidationError({'direccion': 'Delivery exige dirección.'})
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product_name = models.CharField(max_length=200)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+    qty = models.PositiveIntegerField(default=1)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def __str__(self):
+        return f"{self.qty} x {self.product_name}"

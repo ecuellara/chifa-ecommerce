@@ -22,12 +22,16 @@
           :alt="product.name"
           class="w-20 h-20 object-cover rounded mr-4"
         />
-        <div>
+        <div class="flex-1">
           <h2 class="text-xl font-semibold text-gray-800">{{ product.name }}</h2>
           <p v-if="product.description" class="text-gray-600 text-sm">
             {{ product.description }}
           </p>
           <p class="text-red-600 font-bold mt-1">S/. {{ product.price }}</p>
+          <button @click="handleAdd(product)"
+            class="mt-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-4 py-2 rounded transition">
+            Agregar
+          </button>
         </div>
       </div>
 
@@ -42,12 +46,19 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '../services/axios'
+import { useCartStore } from '../stores/cartStore'
 
 const route = useRoute()
 const products = ref([])
 const categoryName = ref('')
 const isLoading = ref(false)
 const error = ref(null)
+
+const cartStore = useCartStore()
+
+const handleAdd = (product) => {
+  cartStore.addItem(product, 1)
+}
 
 const fetchProducts = async () => {
   const slug = route.params.slug
