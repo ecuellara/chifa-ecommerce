@@ -32,6 +32,9 @@ class OrderCreateSerializer(serializers.Serializer):
         items_data = validated_data.pop('items')
         zona_id = validated_data.pop('zona_id', None)
 
+        request = self.context.get('request')
+        user = request.user if request and request.user.is_authenticated else None
+
         with transaction.atomic():
             zona = None
             delivery_cost = Decimal('0')
@@ -42,6 +45,7 @@ class OrderCreateSerializer(serializers.Serializer):
                 delivery_cost = zona.cost
 
             order = Order.objects.create(
+                user=user,
                 zona=zona,
                 direccion=validated_data.get('direccion', ''),
                 delivery_cost=delivery_cost,

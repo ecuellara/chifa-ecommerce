@@ -7,6 +7,9 @@ const router = createRouter({
     { path: '/', name: 'home', component: HomeView },
     { path: '/cart', name: 'cart', component: () => import('../views/CartView.vue') },
     { path: '/categoria/:slug', name: 'category', component: () => import('../views/ProductListView.vue') },
+    { path: '/checkout', name: 'checkout', component: () => import('../views/CheckoutView.vue') },
+    { path: '/order/:id/success', name: 'order-success', component: () => import('../views/OrderSuccessView.vue') },
+    { path: '/track', name: 'track', component: () => import('../views/TrackOrderView.vue') },
   ],
 })
 

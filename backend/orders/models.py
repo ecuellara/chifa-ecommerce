@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from catalog.models import Product
 from delivery.models import DeliveryZone
+from django.contrib.auth.models import User
 
 class Order(models.Model):
     DELIVERY = 'delivery'
@@ -21,6 +22,19 @@ class Order(models.Model):
         ('entregado', 'Entregado'),
         ('cancelado', 'Cancelado'),
     ]
+    TRANSITIONS = {
+        'pendiente': ['confirmado', 'cancelado'],
+        'confirmado': ['preparacion', 'cancelado'],
+        'preparacion': ['camino', 'cancelado'],
+        'camino': ['entregado'],
+        'entregado': [],
+        'cancelado': [],
+    }
+
+    def can_transition(self, new_estado):
+        return new_estado in self.TRANSITIONS.get(self.estado, [])
+
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='orders')
 
     tipo_entrega = models.CharField(max_length=20, choices=TYPE_CHOICES, default=DELIVERY)
     nombre = models.CharField(max_length=120)
@@ -43,11 +57,20 @@ class Order(models.Model):
         return f"Pedido #{self.id} - {self.nombre} - S/. {self.total}"
 
     def clean(self):
+        super().clean()
         if self.tipo_entrega == self.DELIVERY:
             if not self.zona:
                 raise ValidationError({'zona': 'Delivery exige zona.'})
-            if not self.direccion.strip():
+            if not (self.direccion or '').strip():
                 raise ValidationError({'direccion': 'Delivery exige dirección.'})
+        # validar transición solo si ya existe en DB (update, no create)
+        if self.pk:
+            try:
+                old = Order.objects.get(pk=self.pk)
+            except Order.DoesNotExist:
+                return
+            if old.estado != self.estado and not old.can_transition(self.estado):
+                raise ValidationError({'estado': f"No puedes pasar de {old.estado} a {self.estado}."})
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
