@@ -1,7 +1,7 @@
 <template>
   <div class="p-8 max-w-sm mx-auto">
     <h1 class="text-2xl font-bold mb-4">Iniciar sesión</h1>
-    <input v-model="u" placeholder="Usuario" class="w-full border p-2 rounded mb-2" />
+    <input v-model="u" placeholder="Usuario o email" class="w-full border p-2 rounded mb-2" />
     <input v-model="p" type="password" placeholder="Contraseña" class="w-full border p-2 rounded mb-2" />
     <p v-if="e" class="text-red-500 text-sm mb-2">{{ e }}</p>
     <button @click="doLogin" class="bg-red-600 text-white px-4 py-2 rounded w-full">Entrar</button>

@@ -74,9 +74,15 @@ const deliveryCost = computed(() => {
   return z ? String(z.cost) : '0.00'
 })
 
-onMounted(async () => {  
+onMounted(async () => {
+  if (authStore.isLogged) {
+    try { await authStore.fetchMe() } catch {}
+    const full = `${authStore.firstName} ${authStore.lastName}`.trim()
+    if (full && !nombre.value) nombre.value = full
+    else if (authStore.username && !nombre.value) nombre.value = authStore.username
+    if (authStore.phone && !telefono.value) telefono.value = authStore.phone
+  }
   try {
-    if (authStore.isLogged && authStore.username && !nombre.value) nombre.value = authStore.username
     const r = await api.get('zones/')
     zonas.value = Array.isArray(r.data) ? r.data : r.data.results || []
   } catch (e) { error.value = 'No se pudieron cargar zonas.' }
