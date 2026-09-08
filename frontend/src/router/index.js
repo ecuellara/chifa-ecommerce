@@ -20,6 +20,7 @@ const router = createRouter({
       children: [
         { path: '', name: 'staff-home', component: () => import('../views/staff/StaffDashboardView.vue') },
         { path: 'orders', name: 'staff-orders', component: () => import('../views/staff/StaffOrdersView.vue') },
+        { path: 'catalog', name: 'staff-catalog', component: () => import('../views/staff/StaffCatalogView.vue') },
       ],
     },
   ],

@@ -4,6 +4,7 @@
       <p class="font-bold mb-4">Chifa Staff</p>
       <router-link to="/staff" class="block underline">Dashboard</router-link>
       <router-link to="/staff/orders" class="block underline">Pedidos</router-link>
+      <router-link to="/staff/catalog" class="block underline">Catálogo</router-link>
       <router-link to="/" class="block underline opacity-70">Ver tienda</router-link>
       <button @click="auth.logout(); $router.push('/staff/login')" class="text-sm opacity-70">Salir</button>
     </aside>

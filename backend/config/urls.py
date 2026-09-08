@@ -9,11 +9,18 @@ from django.conf.urls.static import static
 from accounts.views import RegisterAPIView, CustomLoginView, MeAPIView
 from rest_framework_simplejwt.views import TokenRefreshView
 from orders.staff_views import StaffOrderListAPIView, StaffOrderPatchAPIView, StaffStatsAPIView
+from catalog.staff_views import StaffCategoryViewSet, StaffProductViewSet
+from delivery.staff_views import StaffDeliveryZoneViewSet
 
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='category')
 router.register(r'products', ProductViewSet, basename='product')
 router.register(r'zones', DeliveryZoneViewSet, basename='zone')
+
+staff_router = DefaultRouter()
+staff_router.register(r'categories', StaffCategoryViewSet, basename='staff-category')
+staff_router.register(r'products', StaffProductViewSet, basename='staff-product')
+staff_router.register(r'zones', StaffDeliveryZoneViewSet, basename='staff-zone')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +36,7 @@ urlpatterns = [
     path('api/staff/orders/', StaffOrderListAPIView.as_view(), name='staff-orders'),
     path('api/staff/orders/<int:pk>/', StaffOrderPatchAPIView.as_view(), name='staff-order-patch'),
     path('api/staff/stats/', StaffStatsAPIView.as_view(), name='staff-stats'),
+    path('api/staff/', include(staff_router.urls)),
 ]
 
 if settings.DEBUG:
