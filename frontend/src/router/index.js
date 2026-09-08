@@ -14,13 +14,27 @@ const router = createRouter({
     { path: '/login', name: 'login', component: () => import('../views/LoginView.vue') },
     { path: '/register', name: 'register', component: () => import('../views/RegisterView.vue') },
     { path: '/my-orders', name: 'my-orders', component: () => import('../views/MyOrdersView.vue'), meta: { requiresAuth: true } },
+    { path: '/staff/login', name: 'staff-login', component: () => import('../views/staff/StaffLoginView.vue') },
+    {
+      path: '/staff', component: () => import('../views/staff/AdminLayout.vue'), meta: { requiresStaff: true },
+      children: [
+        { path: '', name: 'staff-home', component: () => import('../views/staff/StaffDashboardView.vue') },
+        { path: 'orders', name: 'staff-orders', component: () => import('../views/staff/StaffOrdersView.vue') },
+      ],
+    },
   ],
 })
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
   if (to.meta.requiresAuth) {
     const auth = useAuthStore()
     if (!auth.isLogged) return { path: '/login', query: { next: to.fullPath } }
+  }
+  if (to.meta.requiresStaff) {
+    const auth = useAuthStore()
+    if (!auth.isLogged) return { path: '/staff/login' }
+    try { await auth.fetchMe() } catch {}
+    if (!auth.isStaff) return { path: '/' }
   }
 })
 

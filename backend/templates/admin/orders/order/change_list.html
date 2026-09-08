@@ -1,0 +1,11 @@
+{% extends "admin/change_list.html" %}
+{% block result_list %}
+{% if stats %}
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;padding:10px;margin-bottom:10px;">
+  Pedidos: <strong>{{ stats.n }}</strong> |
+  Ventas: <strong>S/. {{ stats.ventas }}</strong> |
+  Ticket promedio: <strong>S/. {{ stats.ticket }}</strong>
+</div>
+{% endif %}
+{{ block.super }}
+{% endblock %}

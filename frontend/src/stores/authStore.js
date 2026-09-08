@@ -10,17 +10,20 @@ export const useAuthStore = defineStore('auth', () => {
   const lastName = ref(localStorage.getItem('chifa_last') || '')
   const email = ref(localStorage.getItem('chifa_email') || '')
   const phone = ref(localStorage.getItem('chifa_phone') || '')
+  const isStaff = ref(localStorage.getItem('chifa_staff') === '1')
   const isLogged = ref(!!access.value)
 
   function persistProfile(p) {
     firstName.value = p.first_name || ''; lastName.value = p.last_name || ''
     email.value = p.email || ''; phone.value = p.phone || ''
     username.value = p.username || username.value
+    isStaff.value = !!p.is_staff
     localStorage.setItem('chifa_first', firstName.value)
     localStorage.setItem('chifa_last', lastName.value)
     localStorage.setItem('chifa_email', email.value)
     localStorage.setItem('chifa_phone', phone.value)
     localStorage.setItem('chifa_user', username.value)
+    localStorage.setItem('chifa_staff', isStaff.value ? '1' : '0')
   }
 
   function saveTokens(a, r, u) {
@@ -50,10 +53,10 @@ export const useAuthStore = defineStore('auth', () => {
 
   function logout() {
     saveTokens('', '', ''); persistProfile({})
-    ;['chifa_access','chifa_refresh','chifa_user','chifa_first','chifa_last','chifa_email','chifa_phone'].forEach(k=>localStorage.removeItem(k))
-    firstName.value=''; lastName.value=''; email.value=''; phone.value=''; username.value=''
+    ;['chifa_access','chifa_refresh','chifa_user','chifa_first','chifa_last','chifa_email','chifa_phone','chifa_staff'].forEach(k=>localStorage.removeItem(k))
+    firstName.value=''; lastName.value=''; email.value=''; phone.value=''; username.value=''; isStaff.value=false
   }
 
   if (access.value) fetchMe()
-  return { access, refresh, username, firstName, lastName, email, phone, isLogged, login, register, logout, fetchMe }
+  return { access, refresh, username, firstName, lastName, email, phone, isStaff, isLogged, login, register, logout, fetchMe }
 })
