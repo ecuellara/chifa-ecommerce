@@ -51,9 +51,11 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../services/axios'
 import { useCartStore } from '../stores/cartStore'
+import { useAuthStore } from '../stores/authStore'
 
 const cartStore = useCartStore()
 const router = useRouter()
+const auth = useAuthStore()
 
 const tipo = ref('delivery')
 const nombre = ref('')
@@ -72,8 +74,9 @@ const deliveryCost = computed(() => {
   return z ? String(z.cost) : '0.00'
 })
 
-onMounted(async () => {
+onMounted(async () => {  
   try {
+    if (auth.isLogged && auth.username && !nombre.value) nombre.value = auth.username
     const r = await api.get('zones/')
     zonas.value = Array.isArray(r.data) ? r.data : r.data.results || []
   } catch (e) { error.value = 'No se pudieron cargar zonas.' }
