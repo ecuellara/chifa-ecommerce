@@ -37,18 +37,16 @@ class OrderCreateSerializer(serializers.Serializer):
 
         with transaction.atomic():
             zona = None
-            delivery_cost = Decimal('0')
             if validated_data['tipo_entrega'] == 'delivery':
                 zona = DeliveryZone.objects.filter(id=zona_id, is_active=True).first()
                 if not zona:
                     raise serializers.ValidationError({'zona_id': 'Zona inválida.'})
-                delivery_cost = zona.cost
 
             order = Order.objects.create(
                 user=user,
                 zona=zona,
                 direccion=validated_data.get('direccion', ''),
-                delivery_cost=delivery_cost,
+                delivery_cost=Decimal('0'),
                 **{k: v for k, v in validated_data.items() if k not in ('zona_id', 'direccion')},
             )
 
@@ -69,9 +67,15 @@ class OrderCreateSerializer(serializers.Serializer):
                     subtotal=line,
                 )
 
+            if validated_data['tipo_entrega'] == 'delivery' and zona:
+                delivery_cost = zona.get_delivery_cost(subtotal)
+            else:
+                delivery_cost = Decimal('0')
+
             order.subtotal = subtotal
+            order.delivery_cost = delivery_cost
             order.total = subtotal + delivery_cost
-            order.save(update_fields=['subtotal', 'total'])
+            order.save(update_fields=['subtotal', 'delivery_cost', 'total'])
             return order
 
 class OrderDetailSerializer(serializers.ModelSerializer):
