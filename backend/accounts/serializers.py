@@ -43,4 +43,4 @@ class MeSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(source='profile.phone', read_only=True, default='')
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'phone']
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone', 'is_staff']

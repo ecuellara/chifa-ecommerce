@@ -8,6 +8,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import RegisterAPIView, CustomLoginView, MeAPIView
 from rest_framework_simplejwt.views import TokenRefreshView
+from orders.staff_views import StaffOrderListAPIView, StaffOrderPatchAPIView, StaffStatsAPIView
 
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='category')
@@ -25,6 +26,9 @@ urlpatterns = [
     path('api/auth/me/', MeAPIView.as_view(), name='auth-me'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='auth-refresh'),
     path('api/my-orders/', MyOrdersListAPIView.as_view(), name='my-orders'),
+    path('api/staff/orders/', StaffOrderListAPIView.as_view(), name='staff-orders'),
+    path('api/staff/orders/<int:pk>/', StaffOrderPatchAPIView.as_view(), name='staff-order-patch'),
+    path('api/staff/stats/', StaffStatsAPIView.as_view(), name='staff-stats'),
 ]
 
 if settings.DEBUG:
