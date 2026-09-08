@@ -6,8 +6,8 @@ from delivery.views import DeliveryZoneViewSet
 from orders.views import MyOrdersListAPIView, OrderCreateAPIView, OrderDetailAPIView, OrderTrackAPIView
 from django.conf import settings
 from django.conf.urls.static import static
-from accounts.views import RegisterAPIView
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from accounts.views import RegisterAPIView, CustomLoginView, MeAPIView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='category')
@@ -21,7 +21,8 @@ urlpatterns = [
     path('api/orders/track/', OrderTrackAPIView.as_view(), name='order-track'),
     path('api/orders/<int:pk>/', OrderDetailAPIView.as_view(), name='order-detail'),
     path('api/auth/register/', RegisterAPIView.as_view(), name='auth-register'),
-    path('api/auth/login/', TokenObtainPairView.as_view(), name='auth-login'),
+    path('api/auth/login/', CustomLoginView.as_view(), name='auth-login'),
+    path('api/auth/me/', MeAPIView.as_view(), name='auth-me'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='auth-refresh'),
     path('api/my-orders/', MyOrdersListAPIView.as_view(), name='my-orders'),
 ]

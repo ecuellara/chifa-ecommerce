@@ -55,7 +55,7 @@ import { useAuthStore } from '../stores/authStore'
 
 const cartStore = useCartStore()
 const router = useRouter()
-const auth = useAuthStore()
+const authStore = useAuthStore()
 
 const tipo = ref('delivery')
 const nombre = ref('')
@@ -76,7 +76,7 @@ const deliveryCost = computed(() => {
 
 onMounted(async () => {  
   try {
-    if (auth.isLogged && auth.username && !nombre.value) nombre.value = auth.username
+    if (authStore.isLogged && authStore.username && !nombre.value) nombre.value = authStore.username
     const r = await api.get('zones/')
     zonas.value = Array.isArray(r.data) ? r.data : r.data.results || []
   } catch (e) { error.value = 'No se pudieron cargar zonas.' }
