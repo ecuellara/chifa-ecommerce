@@ -20,6 +20,8 @@
           v-if="product.image"
           :src="product.image"
           :alt="product.name"
+          loading="lazy"
+          decoding="async"
           class="w-20 h-20 object-cover rounded mr-4"
         />
         <div class="flex-1">

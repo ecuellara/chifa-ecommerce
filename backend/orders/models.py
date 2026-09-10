@@ -52,6 +52,11 @@ class Order(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['estado', '-created_at'], name='order_estado_created_idx'),
+            models.Index(fields=['telefono'], name='order_telefono_idx'),
+            models.Index(fields=['user', '-created_at'], name='order_user_created_idx'),
+        ]
 
     def __str__(self):
         return f"Pedido #{self.id} - {self.nombre} - S/. {self.total}"

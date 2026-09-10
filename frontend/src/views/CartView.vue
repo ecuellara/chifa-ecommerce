@@ -13,7 +13,7 @@
         :key="item.id"
         class="bg-white shadow rounded-lg p-4 mb-3 flex items-center gap-4"
       >
-        <img v-if="item.image" :src="item.image" :alt="item.name" class="w-16 h-16 object-cover rounded" />
+        <img v-if="item.image" :src="item.image" :alt="item.name" loading="lazy" decoding="async" class="w-16 h-16 object-cover rounded" />
         <div class="flex-1">
           <h2 class="font-semibold">{{ item.name }}</h2>
           <p class="text-red-600 font-bold">S/. {{ item.price }} c/u</p>

@@ -1,7 +1,9 @@
 import axios from 'axios'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api/'
+
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/',
+  baseURL: API_URL,
   timeout: 10000,
 })
 
@@ -21,7 +23,7 @@ api.interceptors.response.use(
       orig._retry = true
       try {
         const rt = localStorage.getItem('chifa_refresh')
-        const r = await axios.post('http://127.0.0.1:8000/api/auth/refresh/', { refresh: rt })
+        const r = await axios.post(`${API_URL}auth/refresh/`, { refresh: rt })
         localStorage.setItem('chifa_access', r.data.access)
         orig.headers.Authorization = `Bearer ${r.data.access}`
         return api(orig)

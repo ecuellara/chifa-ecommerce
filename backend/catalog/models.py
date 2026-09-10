@@ -38,6 +38,9 @@ class Product(models.Model):
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
         ordering = ['order', 'name']
+        indexes = [
+            models.Index(fields=['is_active', 'order'], name='product_active_order_idx'),
+        ]
 
     def __str__(self):
         return self.name
