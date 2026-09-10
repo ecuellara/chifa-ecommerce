@@ -24,6 +24,7 @@ staff_router.register(r'zones', StaffDeliveryZoneViewSet, basename='staff-zone')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('i18n/', include('django.conf.urls.i18n')),
     path('api/', include(router.urls)),
     path('api/orders/', OrderCreateAPIView.as_view(), name='order-create'),
     path('api/orders/track/', OrderTrackAPIView.as_view(), name='order-track'),
