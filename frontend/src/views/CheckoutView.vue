@@ -107,7 +107,7 @@ const confirmar = async () => {
     }
     const r = await api.post('orders/', payload)
     cartStore.clear()
-    router.push(`/order/${r.data.id}/success`)
+    router.push({ path: `/order/${r.data.id}/success`, query: { t: telefono.value } })
   } catch (e) {
     error.value = e.response?.data?.detail || JSON.stringify(e.response?.data) || 'Error al crear pedido.'
   } finally { loading.value = false }

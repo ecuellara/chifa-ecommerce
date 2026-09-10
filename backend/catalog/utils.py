@@ -1,7 +1,10 @@
 import os
 import time
 from pathlib import Path
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, UnidentifiedImageError
+from django.core.exceptions import ValidationError
+
+MAX_UPLOAD_MB = 5
 
 
 def process_product_image(abs_image_path: str, slug: str) -> str:
@@ -9,9 +12,30 @@ def process_product_image(abs_image_path: str, slug: str) -> str:
     Convierte imagen a JPG 400x400 cover y la renombra.
     Retorna la ruta RELATIVA para guardar en ImageField.
     Ej: "products/producto_arroz-chaufa_1725456789.jpg"
+    Rechaza no-imágenes y archivos >5MB.
     """
-    # 1. Abrir imagen original desde disco
-    img = Image.open(abs_image_path)
+    # 0. Tope de tamaño (anti-DoS por uploads gigantes)
+    try:
+        size_mb = Path(abs_image_path).stat().st_size / (1024 * 1024)
+    except OSError:
+        raise ValidationError('Archivo no encontrado.')
+    if size_mb > MAX_UPLOAD_MB:
+        try:
+            os.remove(abs_image_path)
+        except OSError:
+            pass
+        raise ValidationError(f'Imagen muy pesada ({size_mb:.1f}MB). Máximo {MAX_UPLOAD_MB}MB.')
+
+    # 1. Abrir y verificar que sea imagen real (no por extensión)
+    try:
+        img = Image.open(abs_image_path)
+        img.load()
+    except (UnidentifiedImageError, OSError):
+        try:
+            os.remove(abs_image_path)
+        except OSError:
+            pass
+        raise ValidationError('Archivo inválido: debe ser una imagen JPG/PNG/WebP.')
 
     # 2. Quitar transparencia: pegar sobre fondo blanco y pasar a RGB
     if img.mode in ("RGBA", "LA", "P"):

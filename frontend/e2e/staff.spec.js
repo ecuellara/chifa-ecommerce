@@ -2,7 +2,8 @@ import { test, expect } from '@playwright/test'
 test('staff ve dashboard y avanza pedido', async ({ page }) => {
   await page.goto('/staff/login')
   const staffUser = process.env.E2E_STAFF_USER || 'everson'
-  const staffPass = process.env.E2E_STAFF_PASS || 'Inicio001$'
+  const staffPass = process.env.E2E_STAFF_PASS || ''
+  test.skip(!process.env.E2E_STAFF_PASS, 'Requiere E2E_STAFF_PASS (no se guarda claves en repo)')
   await page.getByPlaceholder('Usuario o email').fill(staffUser)
   await page.getByPlaceholder('Contraseña').fill(staffPass)
   await page.getByRole('button', { name: 'Entrar' }).click()

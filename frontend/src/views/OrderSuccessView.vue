@@ -37,7 +37,8 @@ const error = ref('')
 
 onMounted(async () => {
   try {
-    const r = await api.get(`orders/${route.params.id}/`)
+    const params = route.query.t ? { telefono: route.query.t } : {}
+    const r = await api.get(`orders/${route.params.id}/`, { params })
     order.value = r.data
   } catch (e) { error.value = 'No se encontró el pedido.' }
   finally { loading.value = false }
