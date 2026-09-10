@@ -148,7 +148,9 @@ MAILERS = {
 }
 
 # Configuración CORS
-CORS_ALLOWED_ORIGINS = config('CORS_ORIGINS', default='http://localhost:5173,http://127.0.0.1:5173', cast=Csv())
+CORS_ALLOWED_ORIGINS = [
+    o.rstrip('/') for o in config('CORS_ORIGINS', default='http://localhost:5173,http://127.0.0.1:5173', cast=Csv()) if o.rstrip('/')
+]
 CORS_ALLOWED_ORIGIN_REGEXES = [r for r in config('CORS_ORIGIN_REGEXES', default='', cast=Csv()) if r]
 CORS_ALLOW_CREDENTIALS = False
 
