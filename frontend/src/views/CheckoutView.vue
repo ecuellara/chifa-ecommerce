@@ -33,8 +33,7 @@
       <div class="border-t pt-3">
         <p>Subtotal: S/. {{ cartStore.subtotal.toFixed(2) }}</p>
         <p>Delivery: S/. {{ deliveryCost }}</p>
-        <p class="font-bold">Total aprox: S/. {{ (cartStore.subtotal + Number(deliveryCost)).toFixed(2) }}</p>
-        <p class="text-xs text-gray-500">Total final lo calcula el backend.</p>
+        <p class="font-bold">Total aprox: S/. {{ (cartStore.subtotal + Number(deliveryCost)).toFixed(2) }}</p>        
       </div>
 
       <p v-if="error" class="text-red-500 bg-red-100 p-2 rounded">{{ error }}</p>

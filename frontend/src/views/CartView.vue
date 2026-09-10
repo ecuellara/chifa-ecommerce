@@ -27,9 +27,12 @@
         <button @click="cartStore.removeItem(item.id)" class="text-sm text-red-500 underline">Quitar</button>
       </div>
 
-      <div class="mt-6 border-t pt-4 flex justify-between items-center">
+      <div class="mt-6 border-t pt-4 flex justify-between items-center gap-3 flex-wrap">
         <p class="text-xl font-bold">Total: S/. {{ cartStore.subtotal.toFixed(2) }}</p>
-        <button @click="cartStore.clear()" class="text-sm text-gray-500 underline">Vaciar carrito</button>
+        <div class="flex gap-3 items-center">
+          <button @click="cartStore.clear()" class="text-sm text-gray-500 underline">Vaciar carrito</button>
+          <router-link to="/checkout" class="bg-red-600 text-white px-6 py-3 rounded font-bold">Ir a pagar</router-link>
+        </div>
       </div>
     </div>
   </div>
